@@ -1,3 +1,6 @@
+// env variables ?? better to have secret key in .env file or doesn't matter?
+
+
 /** Express app for message.ly. */
 
 
