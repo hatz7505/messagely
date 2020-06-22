@@ -1,7 +1,8 @@
 /** User class for message.ly */
 const bcrypt = require('bcrypt')
 const { BCRYPT_WORK_FACTOR } = require('../config')
-const db = require('../db')
+const db = require('../db');
+const ExpressError = require('../expressError');
 
 /** User of the site. */
 
@@ -37,8 +38,11 @@ class User {
       `SELECT password FROM users
       WHERE username=$1`,
       [username]);
+    if (result.rows.length === 0) {
+      throw new ExpressError("Username does not exist", 401);
+    }
     const userPw = result.rows[0].password;
-    return await bcrypt.compare(password, userPw);
+    return await bcrypt.compare(password, userPw);    
   }
 
   /** Update last_login_at for user */
