@@ -2,6 +2,7 @@
 
 const db = require("../db");
 const ExpressError = require("../expressError");
+const {ACCT_SID, AUTH_TOKEN, TWILIO_NUMBER} = require("../config");
 
 
 /** Message on the site. */
@@ -22,6 +23,7 @@ class Message {
             VALUES ($1, $2, $3, current_timestamp)
             RETURNING id, from_username, to_username, body, sent_at`,
         [from_username, to_username, body]);
+        sendSMS("9252095792", "you got a new message");
 
     return result.rows[0];
   }
@@ -97,6 +99,22 @@ class Message {
     };
   }
 }
+
+function sendSMS(to, message) {
+  var client = require('twilio')(ACCT_SID, AUTH_TOKEN);
+  // console.log(client.api.messages.create())
+  return client.api.messages
+    .create({
+      body: message,
+      to: to,
+      from: TWILIO_NUMBER,
+    }).then(function(data) {
+      console.log('Administrator notified');
+    }).catch(function(err) {
+      console.error('Could not notify administrator');
+      console.error(err);
+    });
+};
 
 
 module.exports = Message;

@@ -4,6 +4,7 @@
 // 3. how to unpack object in JS to pass into method/function
 // 4. why does result.rows.length === 0 work in condition line 41 user.js
 // instead of !result.rows[0].password
+// 5. pros and cons of taking in obj as 1 param vs n params for each key/value in an object
 
 /** Express app for message.ly. */
 
