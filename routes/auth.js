@@ -19,10 +19,10 @@ router.post("/login", async function (req, res, next) {
     let { username, password } = req.body;
 
     if (await User.authenticate(username, password)) {
-      User.updateLoginTimestamp(username);
-      let payload = { username, password };
+      let payload = { username };
       let token = jwt.sign(payload, SECRET_KEY);
       req.body._token = token;
+      await User.updateLoginTimestamp(username);
       return res.json({ token });
 
     }
@@ -43,11 +43,9 @@ router.post("/login", async function (req, res, next) {
 router.post("/register", async function (req, res, next) {
   try {
     let newUser = await User.register(req.body);
-    await User.updateLoginTimestamp(newUser.username);
-
-    let token = jwt.sign(payload = newUser, SECRET_KEY);
+    let token = jwt.sign(payload = newUser.username, SECRET_KEY);
     req.body._token = token;
-
+    await User.updateLoginTimestamp(newUser.username);
     return res.json({ token });
   } catch (err) {
     next(err);
